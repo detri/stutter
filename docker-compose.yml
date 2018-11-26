@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  api:
+    build: api
+    ports:
+      - 5000:5000
+    volumes:
+      - ./api:/app
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+    depends_on:
+      - db
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_PASSWORD=stutter123
+  web:
+    build: web
+    ports:
+      - 3000:3000
+    volumes:
+      - ./web:/app
+    depends_on:
+      - api
