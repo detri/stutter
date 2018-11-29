@@ -1,3 +1,13 @@
+@import 'loaders.css/src/animations/ball-scale.scss';
+
+.loader-hidden {
+  display: none;
+}
+.loader-active {
+  margin-top: 1.5em;
+  display: block;
+}
+
 .main-container {
   box-sizing: border-box;
   border-radius: 3px;
@@ -5,6 +15,7 @@
   width: 66vw;
   padding: 1.5em;
   background-color: #eae8e8;
+  box-shadow: 0px 2px 2px grey;
 }
 
 .new-post {
@@ -24,29 +35,68 @@
   width: 100%;
   box-sizing: border-box;
   margin-top: 1.5em;
-  padding: 1.5em;
-  height: 100px;
+  padding-left: 1.5em;
   border-top: 1px solid #aaa;
   border-bottom: 1px solid #aaa;
 }
 
-.submit-post {
+.button {
   box-sizing: border-box;
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
-  width: 10%;
-  height: 100px;
-  vertical-align: top;
   background: none;
   border: none;
   margin: 0;
   padding: 0;
   border: 1px solid #aaa;
+  outline: none;
+}
+
+.thumbs {
+  cursor: pointer;
+  width: 25%;
+  font-size: 24px;
+  border: none;
+  transition: background-color 0.5s;
+}
+
+.thumbs:hover {
+  transition: background-color 0.5s;
+  background-color: #f3f3f3;
+}
+
+.thumbs svg {
+  padding: 5px;
+}
+
+.thumbs.up {
+  margin-left: 25%;
+  border-right: none;
+  border-top-left-radius: 3px;
+  color: green;
+}
+
+.thumbs.down {
+  margin-right: 25%;
+  border-left: none;
+  border-top-right-radius: 3px;
+  color: darkred;
+}
+
+.vote-count {
+  padding: 3px;
+  vertical-align: 15%;
+}
+
+.submit-post {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  width: 10%;
+  height: 100px;
+  vertical-align: top;
   border-left: none;
   font-size: 3em;
   text-align: center;
   transition: background-color 0.25s;
-  outline: none;
+  cursor: pointer;
 }
 
 .submit-post:hover {

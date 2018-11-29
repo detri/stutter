@@ -77,8 +77,11 @@ class PostAccess:
 
   @staticmethod
   @db_session
-  def read():
-    posts = list(Post.select())
+  def read(page=None):
+    if page:
+      posts = list(Post.select().page(page))
+    else:
+      posts = list(Post.select())
     posts_json = [{
       "content": p.content,
       "up": len([t for t in p.thumbs if t.up]),

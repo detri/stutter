@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_cors import CORS
 from data_access import UserAccess, PostAccess
 from exceptions import *
 from json import loads, dumps
@@ -11,6 +12,9 @@ app.secret_key = b':p\x10\xd9N\xdb\xdd\xfb\xe2z\x01\xbd\x04\x18\xf1`'
 
 # setup login manager
 login_manager = LoginManager(app)
+
+# setup CORS
+CORS(app)
 
 # setup login functions
 @login_manager.user_loader
@@ -71,6 +75,15 @@ def login():
 @app.route("/api/post", methods=["GET"])
 def get_posts():
   posts_json = PostAccess.read()
+  return jsonify({
+    "message": "Posts grabbed successfully",
+    "posts": posts_json
+  })
+
+@app.route("/api/post/<page>", methods=["GET"])
+def get_posts_by_page(page):
+  page = int(page)
+  posts_json = PostAccess.read(page)
   return jsonify({
     "message": "Posts grabbed successfully",
     "posts": posts_json

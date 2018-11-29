@@ -1,5 +1,6 @@
 bcrypt
 Flask
 flask-login
+flask-cors
 pony
 psycopg2-binary
