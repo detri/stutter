@@ -1,5 +1,5 @@
 from models import User, Post, Thumb, Login_Attempt
-from pony.orm import db_session, select
+from pony.orm import db_session, select, desc
 from bcrypt import hashpw, gensalt, checkpw
 from exceptions import LoginException, RegistrationException, ThumbException
 from datetime import datetime
@@ -77,11 +77,14 @@ class PostAccess:
 
   @staticmethod
   @db_session
-  def read(page=None):
+  def read(page=None, order="date_desc"):
+    post_query = Post.select()
+    if order == "date_desc":
+      post_query = post_query.order_by(desc(Post.date_created))
     if page:
-      posts = list(Post.select().page(page))
+      posts = list(post_query.page(page))
     else:
-      posts = list(Post.select())
+      posts = list(post_query)
     posts_json = [{
       "content": p.content,
       "up": len([t for t in p.thumbs if t.up]),

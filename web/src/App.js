@@ -15,6 +15,20 @@ class App extends Component {
       });
   }
 
+  formatTime(hours, minutes) {
+    let am = true;
+    if (minutes < 10) {
+      minutes = '0' + minutes;
+    }
+    if (hours > 11) {
+      am = false;
+    }
+    if (hours > 12) {
+      hours -= 12;
+    }
+    return `${hours}:${minutes} ${am ? 'AM' : 'PM'}`;
+  }
+
   render() {
     return (
       <Fragment>
@@ -24,7 +38,9 @@ class App extends Component {
           <button className="submit-post button">+</button>
           {this.state.posts ?
           this.state.posts.map(post => {
-            return <Post content={post.content} thumbsUps={post.up} thumbsDowns={post.down} />
+            const dateCreated = new Date(post.date_created * 1000);
+            const dateString = `${dateCreated.getMonth() + 1}/${dateCreated.getDate()}/${dateCreated.getFullYear()} ${this.formatTime(dateCreated.getHours(), dateCreated.getMinutes())}`;
+            return <Post content={post.content} thumbsUps={post.up} thumbsDowns={post.down} dateCreated={dateString} />
           })
           :
           <center><Loader type="ball-scale" color="grey" /></center>}

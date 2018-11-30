@@ -13,6 +13,7 @@ class Post extends Component {
     return (
       <div className="post">
         <p className="post-content">{this.props.content}</p>
+        <p className="post-date">{this.props.dateCreated}</p>
         <div className="votes">
           <button className="thumbs up button">
             <FontAwesomeIcon icon={faThumbsUp} /> <span className="vote-count">{this.props.thumbsUps}</span>
