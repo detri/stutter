@@ -1,7 +1,7 @@
 from models import User, Post, Thumb, Login_Attempt
 from pony.orm import db_session, select, desc
 from bcrypt import hashpw, gensalt, checkpw
-from exceptions import LoginException, RegistrationException, ThumbException
+from exceptions import RegistrationException, ThumbException
 from datetime import datetime
 
 class UserAccess:
@@ -36,7 +36,7 @@ class UserAccess:
     )
 
   @staticmethod
-  @db_session(allowed_exceptions=[LoginException])
+  @db_session()
   def login_check(name, password, ip):
     # Check if the user exists, if not
     # store the login attempt.
@@ -46,7 +46,7 @@ class UserAccess:
         remote_address=ip,
         attempted_username=name
       )
-      raise LoginException("User does not exist")
+      return None
     # Check for correct password; if not, store the login attempt.
     correct_pw = checkpw(password.encode('utf-8'), user.password)
     if not correct_pw:
@@ -54,7 +54,7 @@ class UserAccess:
         remote_address=ip,
         attempted_username=name
       )
-      raise LoginException("Incorrect password")
+      return None
     # If our user exists and the password is correct,
     # the attempt was successful. Return the user
     # so Flask-Login can log them in.
@@ -86,6 +86,7 @@ class PostAccess:
     else:
       posts = list(post_query)
     posts_json = [{
+      "id": p.id,
       "content": p.content,
       "up": len([t for t in p.thumbs if t.up]),
       "down": len([t for t in p.thumbs if not t.up]),
@@ -99,13 +100,23 @@ class PostAccess:
     post = Post.get(id=post_id)
     if not post:
       raise ThumbException("This post no longer exists.")
-    thumb = Thumb.get(user=user_id)
+    thumb = Thumb.get(user=user_id, post=post_id)
     if thumb:
       thumb.up = up
       thumb.date_modified = datetime.now()
-      return thumb
-    return Thumb(
-      up=up,
-      user=user_id,
-      post=post_id
-    )
+    else:
+      Thumb(
+        user=user_id,
+        post=post_id,
+        up=up
+      )
+    return {
+      "message": "Thumbs " + ("up" if up else "down") + "!",
+      "post": {
+        "id": post.id,
+        "content": post.content,
+        "up": len([t for t in post.thumbs if t.up]),
+        "down": len([t for t in post.thumbs if not t.up]),
+        "date_created": post.date_created.timestamp()
+      }
+    }

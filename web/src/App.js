@@ -40,7 +40,15 @@ class App extends Component {
           this.state.posts.map(post => {
             const dateCreated = new Date(post.date_created * 1000);
             const dateString = `${dateCreated.getMonth() + 1}/${dateCreated.getDate()}/${dateCreated.getFullYear()} ${this.formatTime(dateCreated.getHours(), dateCreated.getMinutes())}`;
-            return <Post content={post.content} thumbsUps={post.up} thumbsDowns={post.down} dateCreated={dateString} />
+            return <Post
+                      key={post.id}
+                      id={post.id}
+                      content={post.content}
+                      thumbsUps={post.up}
+                      thumbsDowns={post.down}
+                      dateCreated={dateString}
+                      thumbsFunc={this.thumbs}
+                    />
           })
           :
           <center><Loader type="ball-scale" color="grey" /></center>}

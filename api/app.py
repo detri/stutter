@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_jwt import JWT, jwt_required, current_identity
 from flask_cors import CORS
 from data_access import UserAccess, PostAccess
 from exceptions import *
@@ -10,20 +10,26 @@ from pony.orm import TransactionError
 app = Flask(__name__)
 app.secret_key = b':p\x10\xd9N\xdb\xdd\xfb\xe2z\x01\xbd\x04\x18\xf1`'
 
-# setup login manager
-login_manager = LoginManager(app)
 
-# setup CORS
-CORS(app)
+# setup JWT
+def authenticate(username, password):
+  user_login = UserAccess.login_check(
+    username,
+    password,
+    request.remote_addr
+  )
+  if user_login:
+    return user_login
 
-# setup login functions
-@login_manager.user_loader
-def load_user(user_id):
+def identity(payload):
+  user_id = payload['identity']
   return UserAccess.get_by_id(user_id)
 
-@login_manager.unauthorized_handler
-def handle_unauthorized():
-  return UnauthorizedException("You must be logged in to perform this action.").response()
+JWT(app, authenticate, identity)
+
+
+# setup CORS
+CORS(app=app, origin="localhost:3000", supports_credentials=True)
 
 # register route
 @app.route("/register", methods=["POST"])
@@ -48,27 +54,6 @@ def register_user():
     "email": user.email,
   })
 
-# login route
-@app.route("/login", methods=["POST"])
-def login():
-  if not request.is_json:
-    return RequestException("Request is not JSON").response()
-  login_json = request.get_json()
-  try:
-    user_login = UserAccess.login_check(
-      login_json["name"],
-      login_json["password"],
-      request.remote_addr
-    )
-  except KeyError:
-    return RequestException("Invalid login request").response()
-  except LoginException as err:
-    return err.response()
-  login_user(user_login)
-  return jsonify({
-    "message": "Logged in successfully"
-  })
-
 ## API ROUTES ##
 
 # post CRUD
@@ -90,13 +75,13 @@ def get_posts_by_page(page):
   })
 
 @app.route("/api/post", methods=["POST"])
-@login_required
+@jwt_required()
 def create_post():
   if not request.is_json:
     return RequestException("Request is not JSON").response()
   post_json = request.get_json()
   try:
-    new_post = PostAccess.create(post_json["content"], current_user.id)
+    new_post = PostAccess.create(post_json["content"], current_identity.id)
   except KeyError:
     return RequestException("Invalid post request").response()
   return jsonify({
@@ -105,36 +90,32 @@ def create_post():
   })
 
 # thumbs up
-@app.route("/api/post/<id>/up", methods=["POST"])
-@login_required
+@app.route("/api/post/<id>/up")
+@jwt_required()
 def thumbs_up(id):
   try:
-    PostAccess.thumbs(
+    thumb_json = PostAccess.thumbs(
       post_id=id,
-      user_id=current_user.id,
+      user_id=current_identity.id,
       up=True
     )
   except ThumbException as err:
     return err.response()
-  return jsonify({
-    "message": "Thumbs up!"
-  })
+  return jsonify(thumb_json)
 
 # thumbs down
-@app.route("/api/post/<id>/down", methods=["POST"])
-@login_required
+@app.route("/api/post/<id>/down")
+@jwt_required()
 def thumbs_down(id):
   try:
-    PostAccess.thumbs(
+    thumb_json = PostAccess.thumbs(
       post_id=id,
-      user_id=current_user.id,
+      user_id=current_identity.id,
       up=False
     )
   except ThumbException as err:
     return err.response()
-  return jsonify({
-    "message": "Thumbs down!"
-  })
+  return jsonify(thumb_json)
 
 @app.route("/")
 def hello():

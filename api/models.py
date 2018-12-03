@@ -1,10 +1,9 @@
 from datetime import datetime
 from pony.orm import Database, Required, Set, PrimaryKey
-from flask_login import UserMixin
 
 db = Database()
 
-class User(db.Entity, UserMixin):
+class User(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str, 16, unique=True)
     email = Required(str, 320, unique=True)
