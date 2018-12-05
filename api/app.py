@@ -5,11 +5,14 @@ from data_access import UserAccess, PostAccess
 from exceptions import *
 from json import loads, dumps
 from pony.orm import TransactionError
+from datetime import timedelta
 
 # init app
 app = Flask(__name__)
 app.secret_key = b':p\x10\xd9N\xdb\xdd\xfb\xe2z\x01\xbd\x04\x18\xf1`'
 
+# Config app
+app.config['JWT_EXPIRATION_DELTA'] = timedelta(hours=12)
 
 # setup JWT
 def authenticate(username, password):

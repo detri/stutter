@@ -28,9 +28,14 @@ class Post extends Component {
               "error": json.error
             });
             // show error for 5 seconds
-            setTimeout(() => {
-              this.setState({ "error": null })
-            }, 5000);
+            if (this.state.timeout) {
+              clearTimeout(this.state.timeout);
+            }
+            this.setState({
+              timeout: setTimeout(() => {
+                this.setState({ "error": null });
+              }, 5000)
+            });
             return;
           }
           this.setState({
