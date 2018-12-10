@@ -3,10 +3,17 @@ import Post from './Post';
 import { Loader } from 'react-loaders';
 
 class HomePage extends Component {
-  state = {}
+  state = {
+    sort: "date",
+    page: "1"
+  }
 
   componentDidMount() {
-    fetch('http://localhost:5000/api/post')
+    this.fetchPosts();
+  }
+
+  fetchPosts = () => {
+    fetch(`http://localhost:5000/api/post/${this.state.sort}/${this.state.page}`)
       .then(res => res.json())
       .then(json => {
         console.log(json);

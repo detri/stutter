@@ -1,21 +1,14 @@
-import React, { Component, Fragment } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import HomePage from './HomePage';
+import React, { Component } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Layout from './Layout';
 import './App.scss';
 
 class App extends Component {
   render() {
     return (
-      <Fragment>
-        <h1 className="logo">stutter</h1>
-        <div className="main-container">
-          <Router>
-              <Switch>
-                <Route exact path="/" component={HomePage} />
-              </Switch>
-          </Router>
-        </div>
-      </Fragment>
+      <Router>
+        <Layout />
+      </Router>
     );
   }
 }

@@ -142,6 +142,29 @@
   text-align: center;
 }
 
+label {
+  font-size: 10pt;
+}
+
+#username, #password {
+  display: block;
+  border: none;
+  height: 20px;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.loginRegister {
+  margin: 0 auto;
+  text-align: right;
+  width: 66vw;
+}
+
+.link {
+  color: black;
+  font-weight: bold;
+}
+
 @media only screen and (max-width: 767px) {
   .main-container {
     width: calc(100vw - 1.5em);

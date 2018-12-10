@@ -5,6 +5,7 @@ import {
   faThumbsDown
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getAuth } from './auth';
 
 library.add(faThumbsDown, faThumbsUp);
 
@@ -17,33 +18,33 @@ class Post extends Component {
 
   thumbs(id, up = true) {
     const fetchUrlSegment = up ? 'up' : 'down';
-    return () => {
-      fetch(`http://localhost:5000/api/post/${id}/${fetchUrlSegment}`, {
-        credentials: 'include'
-      })
-        .then(res => res.json())
-        .then(json => {
-          if (!json.post) {
-            this.setState({
-              "error": json.error
-            });
-            // show error for 5 seconds
-            if (this.state.timeout) {
-              clearTimeout(this.state.timeout);
-            }
-            this.setState({
-              timeout: setTimeout(() => {
-                this.setState({ "error": null });
-              }, 5000)
-            });
-            return;
+    const auth = getAuth();
+    const headers = auth ? { "Authorization": "JWT " + auth.accessToken } : {};
+    fetch(`http://localhost:5000/api/post/${id}/${fetchUrlSegment}`, {
+      headers
+    })
+      .then(res => res.json())
+      .then(json => {
+        if (!json.post) {
+          this.setState({
+            "error": json.error
+          });
+          // show error for 5 seconds
+          if (this.state.timeout) {
+            clearTimeout(this.state.timeout);
           }
           this.setState({
-            "ups": json.post.up,
-            "downs": json.post.down
+            timeout: setTimeout(() => {
+              this.setState({ "error": null });
+            }, 5000)
           });
+          return;
+        }
+        this.setState({
+          "ups": json.post.up,
+          "downs": json.post.down
         });
-    };
+      });
   }
 
   render() {
@@ -53,10 +54,10 @@ class Post extends Component {
         <p className="post-date">{this.props.dateCreated}</p>
         {this.state.error && <p className="thumb-error">You must be logged in to do that.</p>}
         <div className="votes">
-          <button className="thumbs up button" onClick={this.thumbs(this.props.id)}>
+          <button className="thumbs up button" onClick={() => { this.thumbs(this.props.id) }}>
             <FontAwesomeIcon icon={faThumbsUp} /> <span className="vote-count">{this.state.ups}</span>
           </button>
-          <button className="thumbs down button" onClick={this.thumbs(this.props.id, false)}>
+          <button className="thumbs down button" onClick={() => { this.thumbs(this.props.id, false) }}>
             <FontAwesomeIcon icon={faThumbsDown} /> <span className="vote-count">{this.state.downs}</span>
           </button>
         </div>

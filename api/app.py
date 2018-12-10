@@ -68,10 +68,10 @@ def get_posts():
     "posts": posts_json
   })
 
-@app.route("/api/post/<page>", methods=["GET"])
-def get_posts_by_page(page):
+@app.route("/api/post/<sort>/<page>", methods=["GET"])
+def get_posts_by_page(sort, page):
   page = int(page)
-  posts_json = PostAccess.read(page)
+  posts_json = PostAccess.read(page, sort)
   return jsonify({
     "message": "Posts grabbed successfully",
     "posts": posts_json
