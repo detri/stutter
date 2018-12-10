@@ -87,10 +87,7 @@ def create_post():
     new_post = PostAccess.create(post_json["content"], current_identity.id)
   except KeyError:
     return RequestException("Invalid post request").response()
-  return jsonify({
-    "message": "Post created successfully",
-    "content": new_post.content
-  })
+  return jsonify(new_post)
 
 # thumbs up
 @app.route("/api/post/<id>/up")

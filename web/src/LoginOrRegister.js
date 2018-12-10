@@ -22,11 +22,15 @@ class LoginOrRegister extends Component {
     }
   }
 
+  logout = () => {
+    localStorage.removeItem('auth');
+  }
+
   render() {
     return (
       <div className="loginRegister">
       {this.state.username ? 
-      <span>hello, <strong>{this.state.username}</strong></span>
+      <span>hello, <strong>{this.state.username}</strong>. <a href="#" className="link" onClick={this.logout}>logout</a></span>
       :
       <span><NavLink to="/login" className="link">login</NavLink> or <NavLink to="/register" className="link">register</NavLink></span>}
       </div>

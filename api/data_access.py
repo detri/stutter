@@ -70,10 +70,20 @@ class PostAccess:
   @staticmethod
   @db_session
   def create(content, user):
-    return Post(
+    post = Post(
       content=content,
       user=user
     )
+    return {
+      "message": "Post successfully created!",
+      "post": {
+        "id": post.id,
+        "content": post.content,
+        "up": len([t for t in post.thumbs if t.up]),
+        "down": len([t for t in post.thumbs if not t.up]),
+        "date_created": post.date_created.timestamp()
+      }
+    }
 
   @staticmethod
   @db_session
