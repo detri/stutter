@@ -4,3 +4,4 @@ flask-jwt
 flask-cors
 pony
 psycopg2-binary
+gunicorn
