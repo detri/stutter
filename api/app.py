@@ -33,7 +33,7 @@ JWT(app, authenticate, identity)
 
 
 # setup CORS
-CORS(app=app, origin="localhost:3000", supports_credentials=True)
+# CORS(app=app, origin="localhost:3000", supports_credentials=True)
 
 # register route
 @app.route("/register", methods=["POST"])

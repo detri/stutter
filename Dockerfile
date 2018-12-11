@@ -9,4 +9,4 @@ COPY --from=buildweb /webapp/build /app/static/build
 WORKDIR /app
 RUN pip install -r requirements.txt
 EXPOSE 5000
-ENTRYPOINT ["flask", "run"]
+CMD ["flask", "run"]
