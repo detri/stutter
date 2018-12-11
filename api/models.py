@@ -1,7 +1,13 @@
+import os
 from datetime import datetime
 from pony.orm import Database, Required, Set, PrimaryKey
 
 db = Database()
+
+DB_USER = os.environ['DB_USER']
+DB_HOST = os.environ['DB_HOST']
+DB_PASS = os.environ['DB_PASS']
+DB_NAME = os.environ['DB_NAME']
 
 class User(db.Entity):
     id = PrimaryKey(int, auto=True)
@@ -38,5 +44,5 @@ class Login_Attempt(db.Entity):
     success = Required(bool, default=False)
     date_attempted = Required(datetime, default=lambda: datetime.now())
 
-db.bind(provider='postgres', user='postgres', password='stutter123', host='db', database='postgres')
+db.bind(provider='postgres', user=DB_USER, password=DB_PASS, host=DB_HOST, database=DB_NAME)
 db.generate_mapping(create_tables=True)
