@@ -7,13 +7,16 @@ class Login extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    fetch('http://localhost:5000/auth', {
+    fetch('/auth', {
       method: 'POST',
       headers: {
         'accept': 'application/json',
         'content-type': 'application/json'
       },
-      body: JSON.stringify(this.state)
+      body: JSON.stringify({
+        username: this.state.username,
+        password: this.state.password
+      })
     })
       .then(res => res.json())
       .then(json => {

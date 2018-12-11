@@ -89,6 +89,7 @@ class PostAccess:
   @db_session
   def read(page=None, order="date"):
     post_query = Post.select()
+    post_count = count(post_query)
     if order == "date":
       post_query = post_query.order_by(desc(Post.date_created))
     if "thumbs" in order:
@@ -98,13 +99,16 @@ class PostAccess:
       posts = list(post_query.page(page))
     else:
       posts = list(post_query)
-    posts_json = [{
-      "id": p.id,
-      "content": p.content,
-      "up": len([t for t in p.thumbs if t.up]),
-      "down": len([t for t in p.thumbs if not t.up]),
-      "date_created": p.date_created.timestamp()
-    } for p in posts]
+    posts_json = {
+      "count": post_count,
+      "posts": [{
+        "id": p.id,
+        "content": p.content,
+        "up": len([t for t in p.thumbs if t.up]),
+        "down": len([t for t in p.thumbs if not t.up]),
+        "date_created": p.date_created.timestamp()
+      } for p in posts]
+    }
     return posts_json
 
   @staticmethod

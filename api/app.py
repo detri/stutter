@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify
+import os
+from flask import Flask, request, jsonify, send_from_directory
 from flask_jwt import JWT, jwt_required, current_identity
 from flask_cors import CORS
 from data_access import UserAccess, PostAccess
@@ -8,7 +9,7 @@ from pony.orm import TransactionError
 from datetime import timedelta
 
 # init app
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static/build')
 app.secret_key = b':p\x10\xd9N\xdb\xdd\xfb\xe2z\x01\xbd\x04\x18\xf1`'
 
 # Config app
@@ -74,7 +75,8 @@ def get_posts_by_page(sort, page):
   posts_json = PostAccess.read(page, sort)
   return jsonify({
     "message": "Posts grabbed successfully",
-    "posts": posts_json
+    "posts": posts_json["posts"],
+    "count": posts_json["count"]
   })
 
 @app.route("/api/post", methods=["POST"])
@@ -117,6 +119,11 @@ def thumbs_down(id):
     return err.response()
   return jsonify(thumb_json)
 
-@app.route("/")
-def hello():
-  return "<h1>Hello world!!</h1>"
+# serve static files for production
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_react_app(path):
+    if path != "" and os.path.exists("static/build/" + path):
+        return send_from_directory('static/build', path)
+    else:
+        return send_from_directory('static/build', 'index.html')

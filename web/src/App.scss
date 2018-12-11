@@ -146,7 +146,7 @@ label {
   font-size: 10pt;
 }
 
-#username, #password {
+#username, #password, #email, #confirmpass, #confirmemail {
   display: block;
   border: none;
   height: 20px;
@@ -163,6 +163,26 @@ label {
 .link {
   color: black;
   font-weight: bold;
+}
+
+.pagebtn {
+  border: none;
+  background: #ccc;
+  font-size: 16pt;
+}
+
+.pagebtn.left {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.pagebtn.right {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.pagebtn.active {
+  background: #aaa;
 }
 
 @media only screen and (max-width: 767px) {

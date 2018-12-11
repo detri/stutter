@@ -7,7 +7,8 @@ class HomePage extends Component {
   state = {
     sort: "date",
     page: "1",
-    postContent: ""
+    postContent: "",
+    numPages: 0
   }
 
   componentDidMount() {
@@ -15,11 +16,11 @@ class HomePage extends Component {
   }
 
   fetchPosts = (sort, page) => {
-    fetch(`http://localhost:5000/api/post/${sort}/${page}`)
+    fetch(`/api/post/${sort}/${page}`)
       .then(res => res.json())
       .then(json => {
         console.log(json);
-        this.setState({ posts: json.posts });
+        this.setState({ posts: json.posts, numPages: Math.ceil(json.count / 10) });
       });
   }
 
@@ -55,7 +56,7 @@ class HomePage extends Component {
     const auth = getAuth();
     const post = this.state.postContent;
     if (auth) {
-      fetch('http://localhost:5000/api/post', {
+      fetch('/api/post', {
         method: 'POST',
         headers: {
           'Authorization': 'JWT ' + auth.accessToken,
@@ -90,6 +91,25 @@ class HomePage extends Component {
     }
   }
 
+  changePage = page => {
+    this.setState({
+      page
+    }, () => {
+      this.fetchPosts(this.state.sort, this.state.page)
+    });
+  }
+
+  paginate = (v, i) => {
+    const pageString = (i + 1).toString();
+    if (i === 0) {
+      return <button onClick={() => this.changePage(pageString)} className={`pagebtn left${this.state.page === pageString ? " active" : ""}`}>{i + 1}</button>
+    }
+    if (i === this.state.numPages - 1) {
+      return <button onClick={() => this.changePage(pageString)} className={`pagebtn right${this.state.page === pageString ? " active" : ""}`}>{i + 1}</button>
+    }
+    return <button onClick={() => this.changePage(pageString)} className={`pagebtn${this.state.page === pageString ? " active" : ""}`}>{i + 1}</button>
+  }
+
   render() {
     return (
       <Fragment>
@@ -101,6 +121,9 @@ class HomePage extends Component {
             <option value="thumbs_up">thumbs up</option>
             <option value="thumbs_down">thumbs down</option>
           </select>
+          <center>
+            {this.state.numPages && [...Array(this.state.numPages)].map(this.paginate)}
+          </center>
           {this.state.posts ?
           this.state.posts.map(post => {
             const dateCreated = new Date(post.date_created * 1000);
@@ -112,7 +135,6 @@ class HomePage extends Component {
                       thumbsUps={post.up}
                       thumbsDowns={post.down}
                       dateCreated={dateString}
-                      thumbsFunc={this.thumbs}
                     />
           })
           :

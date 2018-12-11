@@ -20,7 +20,7 @@ class Post extends Component {
     const fetchUrlSegment = up ? 'up' : 'down';
     const auth = getAuth();
     const headers = auth ? { "Authorization": "JWT " + auth.accessToken } : {};
-    fetch(`http://localhost:5000/api/post/${id}/${fetchUrlSegment}`, {
+    fetch(`/api/post/${id}/${fetchUrlSegment}`, {
       headers
     })
       .then(res => res.json())
