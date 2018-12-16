@@ -61,6 +61,10 @@ export const MainContainer = styled.div`
   padding: 1.5em;
   background-color: ${props => props.theme.main};
   box-shadow: 0px 2px 2px grey;
+
+  @media only screen and (max-width: 767px) {
+    width: calc(100vw - 1.5em);
+  }
 `;
 
 export const Logo = styled.h1`
