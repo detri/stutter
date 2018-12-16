@@ -19,15 +19,25 @@ import LoginOrRegister from './LoginOrRegister';
 
 class Layout extends Component {
   state = {
-    theme: themeHelper.currentTheme,
-    themeName: themeHelper.currentThemeName
+    theme: themeHelper.themes[0].colors,
+    themeName: themeHelper.themes[0].name
+  }
+
+  componentDidMount() {
+    const theme = themeHelper.getSavedTheme();
+    this.setState({
+      theme: theme.colors,
+      themeName: theme.name
+    });
   }
 
   updateTheme = id => {
     themeHelper.updateTheme(id);
+    themeHelper.saveSelectedTheme();
+    const theme = themeHelper.getCurrentTheme();
     this.setState({
-      theme: themeHelper.currentTheme,
-      themeName: themeHelper.currentThemeName
+      theme: theme.colors,
+      themeName: theme.name
     });
   }
 

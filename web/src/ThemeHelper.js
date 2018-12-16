@@ -18,15 +18,42 @@ class ThemeHelper {
           lighten: '#fff0f5',
           darken: '#ffa4c2'
         }
+      },
+      {
+        name: 'Gloriously Green',
+        colors: {
+          bg: '#77ab59',
+          main: '#c9df8a',
+          lighten: '#f0f7da',
+          darken: '#36802d'
+        }
       }
     ];
-    this.currentTheme = this.themes[0].colors;
-    this.currentThemeName = this.themes[0].name;
+    this.currentTheme = 0;
   }
 
   updateTheme(id) {
-    this.currentTheme = this.themes[id].colors;
-    this.currentThemeName = this.themes[id].name;
+    this.currentTheme = id;
+  }
+
+  getCurrentTheme() {
+    return this.themes[this.currentTheme];
+  }
+
+  getTheme(id) {
+    return this.themes[id];
+  }
+
+  saveSelectedTheme() {
+    localStorage.setItem("stutterTheme", this.currentTheme.toString());
+  }
+
+  getSavedTheme() {
+    const themeId = localStorage.getItem("stutterTheme");
+    if (themeId) {
+      return this.getTheme(parseInt(themeId));
+    }
+    return this.getTheme(0);
   }
 }
 

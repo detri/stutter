@@ -90,6 +90,7 @@ export const ThemeButton = styled.button`
   height: 1em;
   width: 1em;
   margin-right: 0.5em;
+  border-radius: 3px;
 `;
 
 export const LoginStatus = styled.div`
@@ -185,8 +186,8 @@ export const PostContainer = styled.div`
   box-sizing: border-box;
   margin-top: 1.5em;
   padding-left: 1.5em;
-  border-top: 1px solid #aaa;
-  border-bottom: 1px solid #aaa;
+  border-top: 1px solid ${props => props.theme.darken};
+  border-bottom: 1px solid ${props => props.theme.darken};
 `;
 
 export const PostContent = styled.p`
