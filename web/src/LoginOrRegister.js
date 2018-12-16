@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { getAuth } from './auth';
-import { NavLink } from 'react-router-dom';
+import {
+  LoginStatus,
+  StyledLink,
+  RouterLink
+} from './Display';
 
 class LoginOrRegister extends Component {
   state = {}
@@ -28,12 +32,12 @@ class LoginOrRegister extends Component {
 
   render() {
     return (
-      <div className="loginRegister">
+      <LoginStatus>
       {this.state.username ? 
-      <span>hello, <strong>{this.state.username}</strong>. <a href="#" className="link" onClick={this.logout}>logout</a></span>
+      <span>hello, <strong>{this.state.username}</strong>. <StyledLink onClick={this.logout}>logout</StyledLink></span>
       :
-      <span><NavLink to="/login" className="link">login</NavLink> or <NavLink to="/register" className="link">register</NavLink></span>}
-      </div>
+      <span><RouterLink to="/login">login</RouterLink> or <RouterLink to="/register">register</RouterLink></span>}
+      </LoginStatus>
     );
   }
 }

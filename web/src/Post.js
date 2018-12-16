@@ -6,6 +6,12 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getAuth } from './auth';
+import {
+  PostContainer,
+  PostContent,
+  Votes,
+  ThumbsButton
+} from './Display';
 
 library.add(faThumbsDown, faThumbsUp);
 
@@ -49,19 +55,19 @@ class Post extends Component {
 
   render() {
     return (
-      <div className="post">
-        <p className="post-content">{this.props.content}</p>
+      <PostContainer>
+        <PostContent>{this.props.content}</PostContent>
         <p className="post-date">{this.props.dateCreated}</p>
         {this.state.error && <p className="thumb-error">You must be logged in to do that.</p>}
         <div className="votes">
-          <button className="thumbs up button" onClick={() => { this.thumbs(this.props.id) }}>
+          <ThumbsButton up onClick={() => { this.thumbs(this.props.id) }}>
             <FontAwesomeIcon icon={faThumbsUp} /> <span className="vote-count">{this.state.ups}</span>
-          </button>
-          <button className="thumbs down button" onClick={() => { this.thumbs(this.props.id, false) }}>
+          </ThumbsButton>
+          <ThumbsButton down onClick={() => { this.thumbs(this.props.id, false) }}>
             <FontAwesomeIcon icon={faThumbsDown} /> <span className="vote-count">{this.state.downs}</span>
-          </button>
+          </ThumbsButton>
         </div>
-      </div>
+      </PostContainer>
     )
   }
 }

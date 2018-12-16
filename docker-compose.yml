@@ -10,6 +10,11 @@ services:
     environment:
       - FLASK_APP=app.py
       - FLASK_ENV=development
+      - DB_USER=postgres
+      - DB_HOST=db
+      - DB_PASS=stutter123
+      - DB_NAME=postgres
+      - SECRET_KEY=stutter123
     depends_on:
       - db
   db:

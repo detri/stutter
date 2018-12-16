@@ -1,5 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import Post from './Post';
+import {
+  NewPostBox,
+  SubmitPost,
+  PageButton
+} from './Display';
 import { Loader } from 'react-loaders';
 import { getAuth } from './auth';
 
@@ -102,20 +107,20 @@ class HomePage extends Component {
   paginate = (v, i) => {
     const pageString = (i + 1).toString();
     if (i === 0) {
-      return <button onClick={() => this.changePage(pageString)} className={`pagebtn left${this.state.page === pageString ? " active" : ""}`}>{i + 1}</button>
+      return <PageButton onClick={() => this.changePage(pageString)} left active={this.state.page === pageString}>{i + 1}</PageButton>
     }
     if (i === this.state.numPages - 1) {
-      return <button onClick={() => this.changePage(pageString)} className={`pagebtn right${this.state.page === pageString ? " active" : ""}`}>{i + 1}</button>
+      return <PageButton onClick={() => this.changePage(pageString)} right active={this.state.page === pageString}>{i + 1}</PageButton>
     }
-    return <button onClick={() => this.changePage(pageString)} className={`pagebtn${this.state.page === pageString ? " active" : ""}`}>{i + 1}</button>
+    return <PageButton onClick={() => this.changePage(pageString)} active={this.state.page === pageString}>{i + 1}</PageButton>
   }
 
   render() {
     return (
       <Fragment>
           {this.state.error && <p>{this.state.error}</p>}
-          <textarea className="new-post" name="postContent" placeholder="write something" value={this.state.postContent} onChange={this.onInputChange} />
-          <button className="submit-post button" onClick={this.submitPost}>+</button>
+          <NewPostBox name="postContent" placeholder="write something" value={this.state.postContent} onChange={this.onInputChange} />
+          <SubmitPost className="submit-post button" onClick={this.submitPost}>+</SubmitPost>
           sort: <select value={this.state.sort} name="sort" onChange={this.onInputChange}>
             <option value="date">most recent</option>
             <option value="thumbs_up">thumbs up</option>
