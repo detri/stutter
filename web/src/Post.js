@@ -9,6 +9,7 @@ import { getAuth } from './auth';
 import {
   PostContainer,
   PostContent,
+  PostDate,
   Votes,
   ThumbsButton
 } from './Display';
@@ -57,16 +58,16 @@ class Post extends Component {
     return (
       <PostContainer>
         <PostContent>{this.props.content}</PostContent>
-        <p className="post-date">{this.props.dateCreated}</p>
+        <PostDate>{this.props.dateCreated}</PostDate>
         {this.state.error && <p className="thumb-error">You must be logged in to do that.</p>}
-        <div className="votes">
+        <Votes>
           <ThumbsButton up onClick={() => { this.thumbs(this.props.id) }}>
             <FontAwesomeIcon icon={faThumbsUp} /> <span className="vote-count">{this.state.ups}</span>
           </ThumbsButton>
           <ThumbsButton down onClick={() => { this.thumbs(this.props.id, false) }}>
             <FontAwesomeIcon icon={faThumbsDown} /> <span className="vote-count">{this.state.downs}</span>
           </ThumbsButton>
-        </div>
+        </Votes>
       </PostContainer>
     )
   }

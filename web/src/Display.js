@@ -48,8 +48,8 @@ export const defaultTheme = {
 };
 
 export const OuterContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background: ${props => props.theme.bg};
 `;
 
@@ -189,7 +189,9 @@ export const PostContainer = styled.div`
   border-bottom: 1px solid #aaa;
 `;
 
-export const PostContent = styled.p``;
+export const PostContent = styled.p`
+  width: 80%;
+`;
 
 export const PostDate = styled.p`
   font-size: 12px;
